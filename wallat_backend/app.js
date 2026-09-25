@@ -2,6 +2,8 @@ const express = require('express');
 const mariadb = require('mariadb');
 const cors = require('cors');
 require('dotenv').config();
+// 🌟 ວາງໂຄດແຖວນີ້ໄວ້ທາງເທິງສຸດ ຂອງ app.js ເພື່ອປົດລັອກບັກ BigInt 🌟
+BigInt.prototype.toJSON = function() { return this.toString(); };
 
 const app = express();
 
@@ -141,6 +143,59 @@ app.get('/api/v1/wallet/balance', async (req, res) => {
         if (conn) conn.release();
     }
 });
+// 🚀 ປັບປຸງໃຫມ່: GET API ເສັ້ນທາງ /api/v1/wallet/history
+app.get('/api/v1/wallet/history', async (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    const { userId } = req.query;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, error: "ກະລຸນາລະບຸ userId" });
+    }
+
+    let conn;
+    try {
+        conn = await pool.getConnection();
+
+        // 🌟 [ຂັ້ນຕອນທີ 1]: ດຶງຂໍ້ມູນຈາກຕາຕະລາງ wallets (ມີ t ສອງຕົວ)
+        const walletRows = await conn.query(
+            'SELECT id FROM wallets WHERE user_id = ?',
+            [userId]
+        );
+
+        // ຫາກຍັງບໍ່ມີ Wallet, ໃຫ້ສົ່ງອາເຣຫວ່າງເປົ່າກັບໄປ (UI ຈະບໍ່ຫຼົ້ມ)
+        if (!walletRows || walletRows.length === 0) {
+            return res.status(200).json({ success: true, data: [] });
+        }
+
+        // 🌟 [ຈຸດປົດລັອກ]: ຕ້ອງໃສ່ [0] ເພື່ອດຶງເອົາ ID ຈາກແຖວທຳອິດຂອງ Array
+        const walletId = walletRows[0].id;
+
+        // 🌟 [ຂັ້ນຕອນທີ 2]: ດຶງປະຫວັດການເງິນໂດຍກົງຈາກ wallet_id
+        const historyRows = await conn.query(
+            `SELECT id, amount, transaction_type, status, reference_id, description, created_at 
+             FROM wallet_transactions 
+             WHERE wallet_id = ?
+             ORDER BY created_at DESC`,
+            [walletId]
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "ດຶງປະຫວັດການເງິນສຳເລັດ",
+            data: historyRows
+        });
+
+    } catch (error) {
+        console.error(`❌ ເກີດຂໍ້ຜິດພາດໃນການດຶງປະຫວັດ: ${error.message}`);
+        return res.status(500).json({ 
+            success: false, 
+            error: `ເກີດຂໍ້ຜິດພາດຝັ່ງ Backend: ${error.message}` 
+        });
+    } finally {
+        if (conn) conn.release();
+    }
+});
+
 
 // ປ່ຽນບ່ອນ listen port ໃຫ້ດຶງຈາກ .env ນຳ
 const PORT = process.env.PORT || 5000;
