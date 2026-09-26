@@ -4,8 +4,8 @@
 
 ## 🚀 ຄຸນສົມບັດຫຼັກຂອງລະບົບ (Features)
 - **Real-time Balance Inquiry:** ດຶງຂໍ້ມູນຍອດເງິນຄົງເຫຼືອສົດໆ ຈາກຖານຂໍ້ມູນໂດຍກົງ ພ້ອມລະບົບປ້ອງກັນ Cache ຫຼົ້ມ.
-- **Secure Database Transactions (ACID):** ລະບົບໂອນເງິນທີ່ໃຊ້ `BEGIN TRANSACTION`, `COMMIT`, ແລະ `ROLLBACK` ຮັບປະກັນວ່າເງິນບໍ່ມີທາງຫາຍກາງຄັນ.
-- **Concurrency Control (Pessimistic Locking):** ໃຊ້ຄຳສັ່ງ `FOR UPDATE` ຢູ່ລະດັບ SQL ເພື່ອບັອກການກົດເບິລ (Race Conditions) ແລະ ປ້ອງກັນການຕັດເງິນຊໍ້າຊ້ອນ.
+- **Secure Database Transactions (ACID):** ລະບົບໂອນເງິນທີ່ໃຊ້ `BEGIN TRANSACTION`, `COMMIT`, ແລະ `ROLLBACK` ຮັບປະກັນວ່າເງິນບໍ່ມີທາງຫາຍ.
+- **Concurrency Control (Pessimistic Locking):** ໃຊ້ຄຳສັ່ງ `FOR UPDATE` ຢູ່ລະດັບ SQL ເພື່ອບັອກການກົດ(Race Conditions) ແລະ ປ້ອງກັນການຕັດເງິນຊໍ້າຊ້ອນ.
 - **Idempotency API Pattern:** ດັກຈັບ `UNIQUE reference_id` ໃນຕາຕະລາງປະຫວັດ ເພື່ອປ້ອງກັນການຍິງ Request ໂອນເງິນຊໍ້າຈາກປັນຫາເນັດຫຼຸດ.
 - **BigInt JSON Serialization:** ແກ້ໄຂປັນຫາ Node.js Serialization ບົນຂໍ້ມູນປະເພດ BIGINT ລະດັບ Enterprise.
 - **Cross-Origin Resource Sharing (CORS):** ປົດລັອກ API ໃຫ້ໜ້າບ້ານ ແລະ ຫຼັງບ້ານ ເຊື່ອມຕໍ່ກັນຢ່າງປອດໄພ.
